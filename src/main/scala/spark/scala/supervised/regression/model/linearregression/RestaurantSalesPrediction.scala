@@ -1,11 +1,11 @@
 package spark.scala.supervised.regression.model.linearregression
 
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.sql.SparkSession
 import spark.scala.common.logger.Logging
 
-object RestaurantSalesPrediction extends Logging{
+object RestaurantSalesPrediction extends Logging {
   def main(args: Array[String]): Unit = {
     // Initialize Spark Session
     val spark = SparkSession.builder()
@@ -15,7 +15,7 @@ object RestaurantSalesPrediction extends Logging{
 
     import spark.implicits._
 
-    // Sample dataset: Ad Spend ($) vs Sales Revenue ($)
+    logger.info("Sample dataset: Ad Spend ($) vs Sales Revenue ($)")
     val data = Seq(
       (2000.0, 25000.0),
       (3000.0, 30000.0),
@@ -29,24 +29,24 @@ object RestaurantSalesPrediction extends Logging{
       (11000.0, 92000.0)
     ).toDF("Ad_Spend", "Sales")
 
-    // Convert feature column into Vector format (required for Spark ML)
+    logger.info("Convert feature column into Vector format (required for Spark ML)")
     val assembler = new VectorAssembler()
       .setInputCols(Array("Ad_Spend"))
       .setOutputCol("features")
 
     val finalData = assembler.transform(data)
 
-    // Split data into training (80%) and testing (20%) sets
+    logger.info("Split data into training (80%) and testing (20%) sets")
     val Array(trainingData, testData) = finalData.randomSplit(Array(0.8, 0.2), seed = 42)
 
-    // Define and train the Linear Regression model
+    logger.info("Define and train the Linear Regression model")
     val lr = new LinearRegression()
       .setLabelCol("Sales")
       .setFeaturesCol("features")
 
     val model = lr.fit(trainingData)
 
-    // Print the coefficients and intercept
+    logger.info("Print the coefficients and intercept")
     logger.info(s"\nLinear Regression Model: Sales = ${model.coefficients(0)} * Ad_Spend + ${model.intercept}")
 
     // Make predictions
@@ -55,7 +55,7 @@ object RestaurantSalesPrediction extends Logging{
     // Show predictions
     predictions.select("Ad_Spend", "Sales", "prediction").show()
 
-    // Predict sales for $7,000 Ad Spend
+    logger.info("Predict sales for $7,000 Ad Spend")
     val newInput = Seq(7000.0).toDF("Ad_Spend")
     val newInputTransformed = assembler.transform(newInput)
     val predictedSales = model.transform(newInputTransformed).select("prediction").as[Double].collect()(0)
