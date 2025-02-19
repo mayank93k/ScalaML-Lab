@@ -59,7 +59,7 @@ object RestaurantSalesPrediction extends Logging {
     val newInput = Seq(7000.0).toDF("Ad_Spend")
     val newInputTransformed = assembler.transform(newInput)
     val predictedSales = model.transform(newInputTransformed).select("prediction").as[Double].collect()(0)
-    logger.info(f"\nPredicted Sales for $$7000 Ad Spend: $$$predictedSales%.2f")
+    logger.info(f"Predicted Sales for $$7000 Ad Spend: $$$predictedSales%.2f")
 
     // Stop Spark session
     spark.stop()
