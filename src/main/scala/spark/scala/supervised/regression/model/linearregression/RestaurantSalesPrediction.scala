@@ -5,6 +5,33 @@ import org.apache.spark.ml.regression.LinearRegression
 import org.apache.spark.sql.SparkSession
 import spark.scala.common.logger.Logging
 
+/**
+ * Scenario: Restaurant Sales Prediction
+ * A restaurant wants to understand how its advertising budget affects its monthly sales. The restaurant owner has data on how much they spend on ads each month and the corresponding sales revenue.
+ *
+ * Dataset Example:
+ * Month	Ad Spend ($)	Sales Revenue ($)
+ * Jan	  2,000	        25,000
+ * Feb	  3,000	        30,000
+ * Mar	  5,000	        50,000
+ * Apr	  4,000	        40,000
+ * May	  6,000	        55,000
+ *
+ * Applying Linear Regression:
+ * We assume a relationship:
+ *
+ * Sales Revenue = m * Ad Spend + c
+ * where:
+ *  m (slope) represents the effect of ad spend on sales.
+ *  c (intercept) is the baseline sales without advertising.
+ *
+ * Example:
+ * If the trained model gives us the equation:
+ *              Sales = 8 * Ad Spend + 10000
+ *    If the restaurant plans to spend $7000 on ads next month, the predicated sales would be:
+ *              8 * 7000 + 10000 = 66000
+ *             So, the restaurant can expect $66000 in sales.
+ */
 object RestaurantSalesPrediction extends Logging {
   def main(args: Array[String]): Unit = {
     // Initialize Spark Session
